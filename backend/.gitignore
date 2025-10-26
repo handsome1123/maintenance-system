@@ -1,16 +1,19 @@
-# Node dependencies
+# Node modules
 node_modules/
 
 # Environment
 .env
 
-# Build artifacts
-dist/
-build/
-
 # Logs
 *.log
 
-# OS files
+# Build outputs
+dist/
+build/
+
+# Docker volumes
+../mysql_data/
+
+# System files
 .DS_Store
 Thumbs.db
