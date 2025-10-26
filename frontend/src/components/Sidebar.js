@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Cpu, 
@@ -12,7 +13,8 @@ import {
 } from "lucide-react";
 
 export default function Sidebar({ isOpen }) {
-  const [activeItem, setActiveItem] = useState("dashboard");
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
@@ -27,6 +29,10 @@ export default function Sidebar({ isOpen }) {
     { id: "settings", label: "Settings", icon: Settings, path: "/settings" },
     { id: "help", label: "Help & Support", icon: HelpCircle, path: "/help" },
   ];
+
+  const handleItemClick = (item) => {
+    navigate(item.path); // navigate to the route
+  };
 
   const styles = {
     sidebar: {
@@ -43,10 +49,7 @@ export default function Sidebar({ isOpen }) {
       flexDirection: "column",
       overflowY: "auto"
     },
-    section: {
-      padding: "20px 16px",
-      flex: 1
-    },
+    section: { padding: "20px 16px", flex: 1 },
     sectionTitle: {
       fontSize: "11px",
       fontWeight: "600",
@@ -76,15 +79,8 @@ export default function Sidebar({ isOpen }) {
       justifyContent: "center",
       color: isActive ? "#2563eb" : "#6b7280"
     }),
-    bottomSection: {
-      padding: "16px",
-      borderTop: "1px solid #e5e7eb"
-    },
-    divider: {
-      height: "1px",
-      backgroundColor: "#e5e7eb",
-      margin: "16px 0"
-    },
+    bottomSection: { padding: "16px", borderTop: "1px solid #e5e7eb" },
+    divider: { height: "1px", backgroundColor: "#e5e7eb", margin: "16px 0" },
     userCard: {
       display: "flex",
       alignItems: "center",
@@ -108,34 +104,10 @@ export default function Sidebar({ isOpen }) {
       fontWeight: "600",
       fontSize: "14px"
     },
-    userInfo: {
-      flex: 1
-    },
-    userName: {
-      fontSize: "14px",
-      fontWeight: "600",
-      color: "#111827",
-      marginBottom: "2px"
-    },
-    userRole: {
-      fontSize: "12px",
-      color: "#6b7280"
-    },
-    badge: {
-      backgroundColor: "#ef4444",
-      color: "white",
-      fontSize: "10px",
-      fontWeight: "600",
-      padding: "2px 6px",
-      borderRadius: "10px",
-      marginLeft: "auto"
-    }
-  };
-
-  const handleItemClick = (itemId) => {
-    setActiveItem(itemId);
-    // Add navigation logic here
-    // navigate(item.path);
+    userInfo: { flex: 1 },
+    userName: { fontSize: "14px", fontWeight: "600", color: "#111827", marginBottom: "2px" },
+    userRole: { fontSize: "12px", color: "#6b7280" },
+    badge: { backgroundColor: "#ef4444", color: "white", fontSize: "10px", fontWeight: "600", padding: "2px 6px", borderRadius: "10px", marginLeft: "auto" }
   };
 
   return (
@@ -144,26 +116,20 @@ export default function Sidebar({ isOpen }) {
         <div style={styles.sectionTitle}>Main Menu</div>
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeItem === item.id;
+          const isActive = location.pathname === item.path; // ✅ derive from current path
           return (
             <div
               key={item.id}
               style={styles.menuItem(isActive)}
-              onClick={() => handleItemClick(item.id)}
-              onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = "#f9fafb";
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
-              }}
+              onClick={() => handleItemClick(item)}
+              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.backgroundColor = "#f9fafb"; }}
+              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.backgroundColor = "transparent"; }}
             >
               <div style={styles.iconWrapper(isActive)}>
                 <Icon size={20} />
               </div>
               <span>{item.label}</span>
-              {item.id === "notifications" && (
-                <span style={styles.badge}>3</span>
-              )}
+              {item.id === "notifications" && <span style={styles.badge}>3</span>}
             </div>
           );
         })}
@@ -173,18 +139,14 @@ export default function Sidebar({ isOpen }) {
         <div style={styles.sectionTitle}>Other</div>
         {bottomMenuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeItem === item.id;
+          const isActive = location.pathname === item.path;
           return (
             <div
               key={item.id}
               style={styles.menuItem(isActive)}
-              onClick={() => handleItemClick(item.id)}
-              onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = "#f9fafb";
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
-              }}
+              onClick={() => handleItemClick(item)}
+              onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.backgroundColor = "#f9fafb"; }}
+              onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.backgroundColor = "transparent"; }}
             >
               <div style={styles.iconWrapper(isActive)}>
                 <Icon size={20} />
